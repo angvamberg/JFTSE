@@ -1284,7 +1284,7 @@ public class GamePacketHandler {
 
             List<Client> clientInRoomLeftShiftList = new ArrayList<>(clientsInRoom);
             clientsInRoom.forEach(c -> {
-                S2CGameNetworkSettingsPacket gameNetworkSettings = new S2CGameNetworkSettingsPacket("127.0.0.1", 5896, room, clientInRoomLeftShiftList);
+                S2CGameNetworkSettingsPacket gameNetworkSettings = new S2CGameNetworkSettingsPacket("178.128.135.130", 5896, room, clientInRoomLeftShiftList);
                 c.getConnection().sendTCP(gameNetworkSettings);
 
                 // shift list to the left, so every client has his player id in the first place when doing session register
