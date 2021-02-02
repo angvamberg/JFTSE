@@ -2,6 +2,7 @@ package com.ft.emulator.server.game.core.matchplay.basic;
 
 import com.ft.emulator.server.game.core.constants.ServeType;
 import com.ft.emulator.server.game.core.matchplay.MatchplayGame;
+import com.ft.emulator.server.game.core.matchplay.PlayerReward;
 import com.ft.emulator.server.game.core.matchplay.room.RoomPlayer;
 import com.ft.emulator.server.game.core.matchplay.room.ServeInfo;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.Setter;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
@@ -77,6 +79,51 @@ public class MatchplayBasicGame extends MatchplayGame {
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
                 .forEach(k -> playerPositions.add(k.getKey()));
         return playerPositions;
+    }
+
+    public List<PlayerReward> getPlayerRewards() {
+        int secondsPlayed = (int) Math.ceil((double) this.getTimeNeeded() / 1000);
+        List<PlayerReward> playerRewards = new ArrayList<>();
+        for (int playerPosition : this.getPlayerPositionsOrderedByPerformance()) {
+            boolean wonGame = false;
+            boolean isPlayerInRedTeam = this.isRedTeam(playerPosition);
+            if (isPlayerInRedTeam && this.getSetsRedTeam() == 2 || !isPlayerInRedTeam && this.getSetsBlueTeam() == 2) {
+                wonGame = true;
+            }
+
+            int basicExpReward;
+            if (secondsPlayed < TimeUnit.MINUTES.toSeconds(2)) {
+                basicExpReward = 1;
+            } else if (secondsPlayed > TimeUnit.MINUTES.toSeconds(15)) {
+                basicExpReward = 130;
+            } else {
+                basicExpReward = (int) Math.round(30 + (secondsPlayed - 90) * 0.12);
+            }
+
+            int playerPositionIndex = this.getPlayerPositionsOrderedByPerformance().indexOf(playerPosition);
+            switch (playerPositionIndex) {
+                case 0:
+                    basicExpReward += basicExpReward * 0.1;
+                    break;
+                case 1:
+                    basicExpReward += basicExpReward * 0.05;
+                    break;
+            }
+
+            if (wonGame) {
+                basicExpReward += basicExpReward * 0.2;
+            }
+
+            int rewardExp = basicExpReward;
+            int rewardGold = basicExpReward;
+            PlayerReward playerReward = new PlayerReward();
+            playerReward.setPlayerPosition(playerPosition);
+            playerReward.setBasicRewardExp(rewardExp);
+            playerReward.setBasicRewardGold(rewardGold);
+            playerRewards.add(playerReward);
+        }
+
+        return playerRewards;
     }
 
     private void resetPoints() {

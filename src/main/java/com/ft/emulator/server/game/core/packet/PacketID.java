@@ -83,6 +83,7 @@ public final class PacketID {
     public final static char S2CMatchPlaySetExperienceGainInfoData = 0x1846;
     public final static char S2CMatchplaySetGameResultData = 0x1848;
     public final static char S2CMatchplayBackToRoom = 0x1780;
+    public final static char C2SMatchplayClientBackInRoom = 0x1773;
     public final static char S2CMatchplayDamageToPlayer = 0x184E;
     public final static char S2CMatchplaySpawnBossBattle = 0x1D55;
     public final static char S2CMatchplayGivePlayerSkills = 0xC98;
@@ -102,6 +103,7 @@ public final class PacketID {
     public final static char S2CRoomMapChangeAnswer = 0x1789;
     public final static char C2SRoomSlotCloseReq = 0x1D4C;
     public final static char S2CRoomSlotCloseAnswer = 0x1D4E;
+    public final static char C2SRoomFittingReq = 0x1D60;
 
     public final static char S2CUnknownRoomJoin = 0x189D;
 
